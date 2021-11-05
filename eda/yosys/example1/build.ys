@@ -1,0 +1,27 @@
+# read design
+read_verilog counter.v
+hierarchy -check
+
+# high-level synthesis
+proc; opt; fsm; opt; memory; opt
+write_verilog counter1_synth_high.v
+
+# mapping to internal cell library
+techmap; opt
+write_verilog counter2_synth_low.v
+
+# map to target architecture
+dfflibmap -liberty cmos_cells.lib
+write_verilog counter3_map_dff.v
+
+abc -liberty cmos_cells.lib
+write_verilog counter4_map_logic.v
+
+# split larger signals
+# splitnets -ports; opt
+
+# write_verilog counter5_split.v
+
+# mapping coarse-grain cells
+# extract -map coarse_cells.v
+# write_verilog counter6_coarse_cells.v
